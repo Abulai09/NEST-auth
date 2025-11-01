@@ -67,9 +67,6 @@ export class AuthService {
     });
     await this.codeRepo.save(loginCode);
 
-    user.sessionVersion += 1;
-    await this.userRepo.save(user);
-
     await this.mailServ.sendCode(user.email, code);
 
     return { message: 'Verification code sent to your email' };
@@ -88,6 +85,9 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('User not found');
 
     await this.codeRepo.delete({ id: record.id });
+
+    user.sessionVersion += 1;
+    await this.userRepo.save(user);
 
     const payload = {
       id: user.id,
