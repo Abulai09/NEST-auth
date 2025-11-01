@@ -12,6 +12,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: 1 })
+  sessionVersion: number;
+
   @OneToMany(() => RefreshToken, (rt) => rt.user)
   refreshTokens: RefreshToken[];
 }

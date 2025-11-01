@@ -17,16 +17,28 @@ export class AuthController {
     res.cookie('refreshToken', userData.refreshToken, {
       maxAge: 20 * 24 * 60 * 60 * 1000, // 20 days
       httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
     });
     return userData;
   }
 
   @Post('login')
-  async login(@Body() dto: userDto, @Res({ passthrough: true }) res) {
-    const userData = await this.authServ.login(dto);
+  async login(@Body() dto: userDto) {
+    return await this.authServ.login(dto);
+  }
+
+  @Post('verify-code')
+  async verifyCode(
+    @Body() body: { email: string; code: string },
+    @Res({ passthrough: true }) res,
+  ) {
+    const userData = await this.authServ.verifyCode(body.email, body.code);
     res.cookie('refreshToken', userData.refreshToken, {
       maxAge: 20 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
     });
     return userData;
   }
@@ -46,6 +58,8 @@ export class AuthController {
     res.cookie('refreshToken', token.refreshToken, {
       maxAge: 20 * 24 * 60 * 60 * 1000,
       httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
     });
     return token;
   }

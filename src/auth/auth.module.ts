@@ -9,14 +9,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from 'src/user/user.entity';
 import { RefreshToken } from 'src/refresh-token/refresh-token.entity';
 import { RefreshTokenModule } from 'src/refresh-token/refresh-token.module';
+import { LoginCode } from './entities/login-code.entity';
+import { MailerService } from './nodemailer/mailer.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, RefreshToken]),
+    TypeOrmModule.forFeature([User, RefreshToken, LoginCode]),
     PassportModule,
     RefreshTokenModule,
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, MailerService],
   controllers: [AuthController],
 })
 export class AuthModule {}

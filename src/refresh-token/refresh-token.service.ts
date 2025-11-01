@@ -5,12 +5,10 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Jwt } from 'jsonwebtoken';
 import { RefreshToken } from './refresh-token.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/user.entity';
 import * as bcrypt from 'bcrypt';
-import { userDto } from 'src/dtos/user.dto';
 
 @Injectable()
 export class RefreshTokenService {
@@ -25,11 +23,19 @@ export class RefreshTokenService {
   generateWebToken(payload: any) {
     console.log(payload);
     const access_token = this.jwtServ.sign(
-      { id: payload.id, email: payload.email },
+      {
+        id: payload.id,
+        email: payload.email,
+        sessionVersion: payload.sessionVersion,
+      },
       { expiresIn: '24h' },
     );
     const refreshToken = this.jwtServ.sign(
-      { id: payload.id, email: payload.email },
+      {
+        id: payload.id,
+        email: payload.email,
+        sessionVersion: payload.sessionVersion,
+      },
       { expiresIn: '20d' },
     );
     return { access_token, refreshToken };
